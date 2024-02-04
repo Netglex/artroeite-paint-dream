@@ -11,3 +11,15 @@ services:
       - POSTGRES_USER=admin
     volumes:
       - C:/Home/Volumes/PaintDream/db:/var/lib/postgresql/data
+  backend:
+    image: backend
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - Kestrel__Endpoints__Http__Url=http://+:5000
+      - ConnectionStrings__PaintDream=Host=db;Port=5432;Database=PaintDream;Username=admin;Password=admin
+    depends_on:
+      - db

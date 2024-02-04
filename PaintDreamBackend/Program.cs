@@ -14,7 +14,7 @@ builder.Services.AddDbContext<PaintDreamContext>(o =>
     o.UseNpgsql(builder.Configuration.GetConnectionString(PaintDreamContext.ConnectionStringKey));
 });
 
-builder.Services.AddHostedService<PaintDreamService>();
+builder.Services.AddHostedService<PaintDreamMain>();
 
 var app = builder.Build();
 

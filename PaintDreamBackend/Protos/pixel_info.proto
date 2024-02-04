@@ -6,6 +6,7 @@ import "google/protobuf/timestamp.proto";
 service PixelInfo {
   rpc GetPixelInfoHistories (google.protobuf.Empty) returns (PixelInfoHistoriesDto);
   rpc CreatePixelInfo (CreatePixelInfoDto) returns (google.protobuf.Empty);
+  rpc SubscribePixelInfoUpdates (google.protobuf.Empty) returns (stream FullPixelInfoDto);
 }
 
 message PixelInfoHistoriesDto {
@@ -13,7 +14,8 @@ message PixelInfoHistoriesDto {
 }
 
 message PixelInfoHistoryDto {
-  repeated PixelInfoDto History = 1;
+  PositionDto Position = 1;
+  repeated PixelInfoDto History = 2;
 }
 
 message PixelInfoDto {
@@ -24,6 +26,12 @@ message PixelInfoDto {
 message CreatePixelInfoDto {
   PositionDto Position = 1;
   ColorDto Color = 2;
+}
+
+message FullPixelInfoDto {
+  PositionDto Position = 1;
+  google.protobuf.Timestamp CreationDate = 2;
+  ColorDto Color = 3;
 }
 
 message PositionDto {
