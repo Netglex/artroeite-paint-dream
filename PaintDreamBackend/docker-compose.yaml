@@ -1,0 +1,13 @@
+name: paint-dream
+
+services:
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+    volumes:
+      - C:/Home/Volumes/PaintDream/db:/var/lib/postgresql/data
