@@ -8,6 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
+builder.Services.AddCors(o =>
+{
+    o.AddDefaultPolicy(p => p
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+    );
+});
 
 builder.Services.AddDbContext<PaintDreamContext>(o =>
 {
@@ -17,6 +25,7 @@ builder.Services.AddDbContext<PaintDreamContext>(o =>
 builder.Services.AddHostedService<PaintDreamMain>();
 
 var app = builder.Build();
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 app.MapGrpcService<PixelInfoServer>();

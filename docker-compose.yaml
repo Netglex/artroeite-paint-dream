@@ -23,3 +23,11 @@ services:
       - ConnectionStrings__PaintDream=Host=db;Port=5432;Database=PaintDream;Username=admin;Password=admin
     depends_on:
       - db
+  envoy:
+    image: envoy
+    build:
+      context: ./paint-dream-envoy
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+      - "9901:9901"
