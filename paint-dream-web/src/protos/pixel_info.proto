@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service PixelInfo {
+  rpc GetPixelInfoHistories (google.protobuf.Empty) returns (PixelInfoHistoriesDto);
+  rpc CreatePixelInfo (CreatePixelInfoDto) returns (google.protobuf.Empty);
+  rpc SubscribePixelInfoUpdates (google.protobuf.Empty) returns (stream FullPixelInfoDto);
+}
+
+message PixelInfoHistoriesDto {
+  repeated PixelInfoHistoryDto Histories = 1;
+}
+
+message PixelInfoHistoryDto {
+  PositionDto Position = 1;
+  repeated PixelInfoDto History = 2;
+}
+
+message PixelInfoDto {
+  google.protobuf.Timestamp CreationDate = 1;
+  ColorDto Color = 2;
+}
+
+message CreatePixelInfoDto {
+  PositionDto Position = 1;
+  ColorDto Color = 2;
+}
+
+message FullPixelInfoDto {
+  PositionDto Position = 1;
+  google.protobuf.Timestamp CreationDate = 2;
+  ColorDto Color = 3;
+}
+
+message PositionDto {
+  int32 X = 1;
+  int32 Y = 2;
+}
+
+message ColorDto {
+  float R = 1;
+  float G = 2;
+  float B = 3;
+}

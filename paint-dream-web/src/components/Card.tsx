@@ -1,10 +1,11 @@
 import { HTMLAttributes } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type TextProps = HTMLAttributes<HTMLDivElement>;
 
-function Card({ children, ...htmlProps }: TextProps) {
+function Card({ className, children, ...htmlProps }: TextProps) {
   return (
-    <div className="text-blue-800" {...htmlProps}>
+    <div className={twMerge(className)} {...htmlProps}>
       {children}
     </div>
   );

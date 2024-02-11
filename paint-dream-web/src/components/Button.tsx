@@ -1,10 +1,11 @@
 import { ButtonHTMLAttributes } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type TextProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-function Button({ children, ...htmlProps }: TextProps) {
+function Button({ className, children, ...htmlProps }: TextProps) {
   return (
-    <button className="text-red-800" {...htmlProps}>
+    <button className={twMerge(className)} {...htmlProps}>
       {children}
     </button>
   );
