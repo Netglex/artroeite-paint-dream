@@ -4,6 +4,7 @@ import { PixelInfoClient } from './clients/pixel_info.client';
 import Button from './components/Button';
 import Card from './components/Card';
 import Canvas from './features/Canvas';
+import { Empty } from './clients/google/protobuf/empty';
 
 function App() {
   const test = async () => {
@@ -28,9 +29,17 @@ function App() {
         baseUrl: 'http://localhost:8080',
       }),
     );
-    const { response } = await client.createPixelInfo(createPixelInfo);
 
-    console.log(`Call made: '${response}'`);
+    const { response } = await client.createPixelInfo(createPixelInfo);
+    console.log(`Call made: '${JSON.stringify(response, (_, v) => (typeof v === 'bigint' ? v.toString() : v))}'`);
+
+    const empty: Empty = {};
+    const call = client.subscribePixelInfoUpdates(empty);
+    for await (const response2 of call.responses) {
+      console.log(
+        `Received message: '${JSON.stringify(response2, (_, v) => (typeof v === 'bigint' ? v.toString() : v))}'`,
+      );
+    }
   };
 
   return (
