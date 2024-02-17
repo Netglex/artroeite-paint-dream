@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaintDreamBackend.Models.Store;
@@ -11,8 +12,8 @@ public class PaintDreamContext(DbContextOptions<PaintDreamContext> options) : Db
     private Dictionary<Type, ValueConverter> _valueConverterDictionary = new()
     {
         [typeof(DateTime)] = new ValueConverter<DateTime, string>(
-            v => v.ToString(),
-            v => DateTime.SpecifyKind(DateTime.Parse(v), DateTimeKind.Utc)
+            v => v.ToString(CultureInfo.InvariantCulture),
+            v => DateTime.SpecifyKind(DateTime.Parse(v, CultureInfo.InvariantCulture), DateTimeKind.Utc)
         )
     };
 

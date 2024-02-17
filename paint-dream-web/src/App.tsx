@@ -1,56 +1,28 @@
-import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
-import { ColorDto, CreatePixelInfoDto, PositionDto } from './clients/pixel_info';
-import { PixelInfoClient } from './clients/pixel_info.client';
-import Button from './components/Button';
-import Card from './components/Card';
-import Canvas from './features/Canvas';
-import { Empty } from './clients/google/protobuf/empty';
+import { twMerge } from 'tailwind-merge';
+import PaintCanvas from './features/Canvas/PaintCanvas';
+import ColorPalette from './features/ColorPalette/ColorPalette';
+import PixelInspection from './features/PixelInspection/PixelInspection';
+import useWindowDimensions from './hooks/WindowDimensions';
 
 function App() {
-  const test = async () => {
-    const position: PositionDto = {
-      x: 2,
-      y: 3,
-    };
-
-    const color: ColorDto = {
-      r: 1,
-      g: 0.5,
-      b: 0,
-    };
-
-    const createPixelInfo: CreatePixelInfoDto = {
-      position,
-      color,
-    };
-
-    const client = new PixelInfoClient(
-      new GrpcWebFetchTransport({
-        baseUrl: 'http://localhost:8080',
-      }),
-    );
-
-    const { response } = await client.createPixelInfo(createPixelInfo);
-    console.log(`Call made: '${JSON.stringify(response, (_, v) => (typeof v === 'bigint' ? v.toString() : v))}'`);
-
-    const empty: Empty = {};
-    const call = client.subscribePixelInfoUpdates(empty);
-    for await (const response2 of call.responses) {
-      console.log(
-        `Received message: '${JSON.stringify(response2, (_, v) => (typeof v === 'bigint' ? v.toString() : v))}'`,
-      );
-    }
-  };
+  const windowDimensions = useWindowDimensions();
+  const highFormat = windowDimensions.width <= windowDimensions.height;
+  const canvasLength = highFormat ? windowDimensions.width : windowDimensions.height;
 
   return (
-    <>
-      <Button onClick={test}>This is a button</Button>
-      <Card>This is the card</Card>
-      <Canvas className="origin-top-left bg-black" width={100} height={100}>
-        This will be displayed if canvas is not supported.
-      </Canvas>
-      <Card>This is the text after the canvas.</Card>
-    </>
+    <div className="h-screen bg-zinc-950 fill-white text-white">
+      <div className={twMerge('flex', highFormat ? 'flex-col' : 'flex-row')}>
+        <PaintCanvas
+          style={{ width: `${canvasLength}px`, height: `${canvasLength}px` }}
+          width={100}
+          height={100}
+        ></PaintCanvas>
+        <div className="flex w-auto min-w-[20rem] flex-grow flex-col">
+          <ColorPalette />
+          <PixelInspection highFormat={highFormat} className="flex-grow" />
+        </div>
+      </div>
+    </div>
   );
 }
 

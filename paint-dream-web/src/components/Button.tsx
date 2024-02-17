@@ -1,14 +1,18 @@
 import { ButtonHTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-type TextProps = ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = { highlighted: boolean } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-function Button({ className, children, ...htmlProps }: TextProps) {
+function ToggleButton({ highlighted, className, style, children, ...htmlProps }: ButtonProps) {
   return (
-    <button className={twMerge(className)} {...htmlProps}>
+    <button
+      className={twMerge('rounded outline-amber-600 hover:brightness-75 transition-all', highlighted ? 'outline-none ' : 'outline-2', className)}
+      style={style}
+      {...htmlProps}
+    >
       {children}
     </button>
   );
 }
 
-export default Button;
+export default ToggleButton;

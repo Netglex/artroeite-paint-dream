@@ -48,7 +48,7 @@ public class PixelInfoServer : PixelInfo.PixelInfoBase
             Histories = { pixelInfoHistories.Select(pih => new PixelInfoHistoryDto
             {
                 Position = new PositionDto { X = pih.Position.X, Y = pih.Position.Y },
-                History = { pih.History.Select(pi => new PixelInfoDto
+                History = { pih.History.OrderByDescending(pi => pi.CreationDate).Select(pi => new PixelInfoDto
                 {
                     CreationDate = pi.CreationDate.ToTimestamp(),
                     Color = new ColorDto { R = pi.Color.R, G = pi.Color.G, B = pi.Color.B }
