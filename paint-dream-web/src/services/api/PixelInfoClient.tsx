@@ -4,7 +4,7 @@ import { PositionDto } from '../../clients/pixel_info';
 
 export const pixelInfoClient = new PixelInfoClient(
   new GrpcWebFetchTransport({
-    baseUrl: 'http://localhost:8080',
+    baseUrl: import.meta.env.VITE_ENVOY_URL,
   }),
 );
 
