@@ -5,6 +5,8 @@ import PixelInspection from './features/PixelInspection/PixelInspection';
 import useWindowDimensions from './hooks/WindowDimensions';
 
 function App() {
+  console.log(import.meta.env.VITE_ENVOY_URL);
+
   const windowDimensions = useWindowDimensions();
   const highFormat = windowDimensions.width <= windowDimensions.height;
   const canvasLength = highFormat ? windowDimensions.width : windowDimensions.height;

@@ -33,3 +33,15 @@ services:
       - ConnectionStrings__PaintDream=Host=db;Port=5432;Database=PaintDream;Username=admin;Password=admin
     depends_on:
       - db
+
+  frontend:
+    image: frontend
+    build:
+      context: ./paint-dream-web
+      dockerfile: ./Dockerfile
+      args:
+        - VITE_ENVOY_URL=http://localhost:8080
+    ports:
+      - 4173:4173
+    depends_on:
+      - backend
