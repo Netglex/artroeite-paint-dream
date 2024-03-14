@@ -15,7 +15,7 @@ public class PixelInfoServer : PixelInfo.PixelInfoBase
     private readonly IHostApplicationLifetime _hostApplicationLifetime;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    private static Subject<PixelInfoDb> OnPixelInfoCreated = new();
+    private static Subject<List<PixelInfoDb>> OnPixelInfosCreated = new();
 
     public PixelInfoServer(
         ILogger<PixelInfoServer> logger,
@@ -57,51 +57,63 @@ public class PixelInfoServer : PixelInfo.PixelInfoBase
         });
     }
 
-    public override async Task<Empty> CreatePixelInfo(CreatePixelInfoDto request, ServerCallContext context)
+    public override async Task<Empty> CreatePixelInfos(CreatePixelInfosDto request, ServerCallContext context)
     {
-        _logger.LogInformation("Creating a pixel info from client {Peer}", context.Peer);
+        _logger.LogInformation("Creating pixel infos from client {Peer}", context.Peer);
 
         using var scope = _serviceScopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<PaintDreamContext>();
 
-        var pixelInfoHistory = await dbContext.PixelInfoHistories.FirstOrDefaultAsync(pih => pih.Position.X == request.Position.X && pih.Position.Y == request.Position.Y);
-        if (pixelInfoHistory == null)
+        var pixelInfos = new List<PixelInfoDb>();
+        foreach (var cpi in request.PixelInfos)
         {
-            pixelInfoHistory = new PixelInfoHistoryDb
+            var pixelInfoHistory = await dbContext.PixelInfoHistories.FirstOrDefaultAsync(pih => pih.Position.X == cpi.Position.X && pih.Position.Y == cpi.Position.Y);
+            
+            pixelInfoHistory ??= new PixelInfoHistoryDb
             {
-                Position = new PositionDb(request.Position.X, request.Position.Y),
+                Position = new PositionDb(cpi.Position.X, cpi.Position.Y),
             };
+
+            var pixelInfo = new PixelInfoDb
+            {
+                Color = new ColorDb(cpi.Color.R, cpi.Color.G, cpi.Color.B),
+                History = pixelInfoHistory
+            };
+
+            await dbContext.PixelInfos.AddAsync(pixelInfo);
+            pixelInfos.Add(pixelInfo);
         }
-
-        var pixelInfo = new PixelInfoDb
-        {
-            Color = new ColorDb(request.Color.R, request.Color.G, request.Color.B),
-            History = pixelInfoHistory
-        };
-
-        await dbContext.PixelInfos.AddAsync(pixelInfo);
         await dbContext.SaveChangesAsync();
-
-        OnPixelInfoCreated.OnNext(pixelInfo);
+        OnPixelInfosCreated.OnNext(pixelInfos);
 
         return new Empty();
     }
 
-    public override async Task SubscribePixelInfoUpdates(Empty request, IServerStreamWriter<FullPixelInfoDto> responseStream, ServerCallContext context)
+    public override async Task SubscribePixelInfosUpdates(Empty request, IServerStreamWriter<FullPixelInfosDto> responseStream, ServerCallContext context)
     {
         _logger.LogInformation("Streaming new pixel infos to client {Peer}", context.Peer);
 
-        OnPixelInfoCreated.Subscribe(async (pi) =>
+        OnPixelInfosCreated.Subscribe(async (pis) =>
         {
-            _logger.LogInformation("Sending new pixel info to client {Peer}", context.Peer);
-
-            await responseStream.WriteAsync(new FullPixelInfoDto
+            try
             {
-                Position = new PositionDto { X = pi.History.Position.X, Y = pi.History.Position.Y },
-                CreationDate = pi.CreationDate.ToTimestamp(),
-                Color = new ColorDto { R = pi.Color.R, G = pi.Color.G, B = pi.Color.B }
-            });
-        }, context.CancellationToken);
+                _logger.LogInformation("Sending new pixel infos to client {Peer}", context.Peer);
+
+                await responseStream.WriteAsync(new FullPixelInfosDto
+                {
+                    PixelInfos =
+                    {
+                        pis.Select(pi => new FullPixelInfoDto
+                        {
+                            Position = new PositionDto { X = pi.History.Position.X, Y = pi.History.Position.Y },
+                            CreationDate = pi.CreationDate.ToTimestamp(),
+                            Color = new ColorDto { R = pi.Color.R, G = pi.Color.G, B = pi.Color.B }
+                        })
+                    }
+                }, context.CancellationToken);
+            }
+            catch { }
+        });
 
         await Task.WhenAny(
             context.CancellationToken.WaitAsync(),

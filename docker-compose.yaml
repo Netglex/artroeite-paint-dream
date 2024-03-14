@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_USER=admin
     volumes:
-      - C:/Home/Volumes/PaintDream/db:/var/lib/postgresql/data
+      - /private/Projects/Volumes/PaintDream/db:/var/lib/postgresql/data
 
   envoy:
     image: envoy
@@ -18,8 +18,8 @@ services:
       context: ./paint-dream-envoy
       dockerfile: ./Dockerfile
     ports:
-      - "8080:8080"
-      - "9901:9901"
+      - 8080:8080
+      - 9901:9901
 
   backend:
     image: backend
@@ -39,9 +39,7 @@ services:
     build:
       context: ./paint-dream-web
       dockerfile: ./Dockerfile
-      args:
-        - VITE_ENVOY_URL=http://localhost:8080
     ports:
-      - 4173:4173
+      - 80:80
     depends_on:
       - backend

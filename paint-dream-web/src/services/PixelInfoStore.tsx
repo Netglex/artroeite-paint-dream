@@ -1,46 +1,32 @@
 import { create } from 'zustand';
-import { FullPixelInfoDto, PixelInfoHistoryDto } from '../clients/pixel_info';
+import { FullPixelInfosDto, PixelInfoHistoryDto } from '../clients/pixel_info';
 import { equals } from './api/PixelInfoClient';
+import { produce } from 'immer';
 
 interface PixelInfoState {
   pixelInfoHistories: PixelInfoHistoryDto[];
   setPixelInfoHistories: (pixelInfoHistories: PixelInfoHistoryDto[]) => void;
-  updatePixelInfo: (fullPixelInfo: FullPixelInfoDto) => void;
+  updatePixelInfos: (fullPixelInfos: FullPixelInfosDto) => void;
 }
 
 const usePixelInfoStore = create<PixelInfoState>((set) => ({
   pixelInfoHistories: [],
   setPixelInfoHistories: (pixelInfoHistories) => set(() => ({ pixelInfoHistories })),
-  updatePixelInfo: (fullPixelInfo) =>
-    set((state) => {
-      const oldHistories = state.pixelInfoHistories;
-      const oldHistory = oldHistories.find((history) => equals(fullPixelInfo.position, history.position)) ?? undefined;
-      var newHistories: PixelInfoHistoryDto[];
-      if (oldHistory) {
-        newHistories = oldHistories.map(
-          (history): PixelInfoHistoryDto =>
-            equals(fullPixelInfo.position, history.position)
-              ? {
-                  position: fullPixelInfo.position,
-                  history: [
-                    { creationDate: fullPixelInfo.creationDate, color: fullPixelInfo.color },
-                    ...history.history,
-                  ],
-                }
-              : history,
-        );
-      } else {
-        newHistories = [
-          ...oldHistories,
-          {
-            position: fullPixelInfo.position,
-            history: [{ creationDate: fullPixelInfo.creationDate, color: fullPixelInfo.color }],
-          },
-        ];
-      }
-
-      return { pixelInfoHistories: newHistories };
-    }),
+  updatePixelInfos: (fullPixelInfos) =>
+    set((state) => ({
+      pixelInfoHistories: produce(state.pixelInfoHistories, (draft) => {
+        for (const fullPixelInfo of fullPixelInfos.pixelInfos) {
+          const oldHistory = draft.find((history) => equals(fullPixelInfo.position, history.position));
+          if (oldHistory)
+            oldHistory.history.push({ creationDate: fullPixelInfo.creationDate, color: fullPixelInfo.color });
+          else
+            draft.push({
+              position: fullPixelInfo.position,
+              history: [{ creationDate: fullPixelInfo.creationDate, color: fullPixelInfo.color }],
+            });
+        }
+      }),
+    })),
 }));
 
 export default usePixelInfoStore;

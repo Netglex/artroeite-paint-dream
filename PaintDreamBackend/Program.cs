@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using PaintDreamBackend.Helpers;
 using PaintDreamBackend.Services;
 using PaintDreamBackend.Services.Api;
 using PaintDreamBackend.Services.Store;
@@ -17,11 +16,6 @@ builder.Services.AddCors(o =>
         .AllowAnyHeader()
     );
 });
-
-await RetryHelper.UntilNoException(() => builder.Services.AddDbContext<PaintDreamContext>(o =>
-{
-    o.UseNpgsql(builder.Configuration.GetConnectionString(PaintDreamContext.ConnectionStringKey));
-}), TimeSpan.FromSeconds(2));
 
 builder.Services.AddDbContext<PaintDreamContext>(o =>
 {

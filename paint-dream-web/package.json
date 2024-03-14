@@ -11,6 +11,13 @@
     "codegen": "npx protoc --proto_path ./src/protos pixel_info.proto --ts_out ./src/clients"
   },
   "dependencies": {
+    "immer": "^10.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.2.1",
+    "zustand": "^4.5.1"
+  },
+  "devDependencies": {
     "@protobuf-ts/grpcweb-transport": "^2.9.3",
     "@protobuf-ts/plugin": "^2.9.3",
     "@types/react": "^18.2.43",
@@ -25,12 +32,8 @@
     "postcss": "^8.4.34",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8",
-    "zustand": "^4.5.1"
+    "vite": "^5.0.8"
   }
 }

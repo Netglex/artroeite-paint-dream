@@ -49,6 +49,15 @@ export interface PixelInfoDto {
     color?: ColorDto;
 }
 /**
+ * @generated from protobuf message CreatePixelInfosDto
+ */
+export interface CreatePixelInfosDto {
+    /**
+     * @generated from protobuf field: repeated CreatePixelInfoDto PixelInfos = 1 [json_name = "PixelInfos"];
+     */
+    pixelInfos: CreatePixelInfoDto[];
+}
+/**
  * @generated from protobuf message CreatePixelInfoDto
  */
 export interface CreatePixelInfoDto {
@@ -60,6 +69,15 @@ export interface CreatePixelInfoDto {
      * @generated from protobuf field: ColorDto Color = 2 [json_name = "Color"];
      */
     color?: ColorDto;
+}
+/**
+ * @generated from protobuf message FullPixelInfosDto
+ */
+export interface FullPixelInfosDto {
+    /**
+     * @generated from protobuf field: repeated FullPixelInfoDto PixelInfos = 1 [json_name = "PixelInfos"];
+     */
+    pixelInfos: FullPixelInfoDto[];
 }
 /**
  * @generated from protobuf message FullPixelInfoDto
@@ -263,6 +281,53 @@ class PixelInfoDto$Type extends MessageType<PixelInfoDto> {
  */
 export const PixelInfoDto = new PixelInfoDto$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class CreatePixelInfosDto$Type extends MessageType<CreatePixelInfosDto> {
+    constructor() {
+        super("CreatePixelInfosDto", [
+            { no: 1, name: "PixelInfos", kind: "message", jsonName: "PixelInfos", repeat: 1 /*RepeatType.PACKED*/, T: () => CreatePixelInfoDto }
+        ]);
+    }
+    create(value?: PartialMessage<CreatePixelInfosDto>): CreatePixelInfosDto {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.pixelInfos = [];
+        if (value !== undefined)
+            reflectionMergePartial<CreatePixelInfosDto>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: CreatePixelInfosDto): CreatePixelInfosDto {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated CreatePixelInfoDto PixelInfos = 1 [json_name = "PixelInfos"];*/ 1:
+                    message.pixelInfos.push(CreatePixelInfoDto.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: CreatePixelInfosDto, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated CreatePixelInfoDto PixelInfos = 1 [json_name = "PixelInfos"]; */
+        for (let i = 0; i < message.pixelInfos.length; i++)
+            CreatePixelInfoDto.internalBinaryWrite(message.pixelInfos[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message CreatePixelInfosDto
+ */
+export const CreatePixelInfosDto = new CreatePixelInfosDto$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class CreatePixelInfoDto$Type extends MessageType<CreatePixelInfoDto> {
     constructor() {
         super("CreatePixelInfoDto", [
@@ -315,6 +380,53 @@ class CreatePixelInfoDto$Type extends MessageType<CreatePixelInfoDto> {
  * @generated MessageType for protobuf message CreatePixelInfoDto
  */
 export const CreatePixelInfoDto = new CreatePixelInfoDto$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class FullPixelInfosDto$Type extends MessageType<FullPixelInfosDto> {
+    constructor() {
+        super("FullPixelInfosDto", [
+            { no: 1, name: "PixelInfos", kind: "message", jsonName: "PixelInfos", repeat: 1 /*RepeatType.PACKED*/, T: () => FullPixelInfoDto }
+        ]);
+    }
+    create(value?: PartialMessage<FullPixelInfosDto>): FullPixelInfosDto {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.pixelInfos = [];
+        if (value !== undefined)
+            reflectionMergePartial<FullPixelInfosDto>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: FullPixelInfosDto): FullPixelInfosDto {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated FullPixelInfoDto PixelInfos = 1 [json_name = "PixelInfos"];*/ 1:
+                    message.pixelInfos.push(FullPixelInfoDto.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: FullPixelInfosDto, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated FullPixelInfoDto PixelInfos = 1 [json_name = "PixelInfos"]; */
+        for (let i = 0; i < message.pixelInfos.length; i++)
+            FullPixelInfoDto.internalBinaryWrite(message.pixelInfos[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message FullPixelInfosDto
+ */
+export const FullPixelInfosDto = new FullPixelInfosDto$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class FullPixelInfoDto$Type extends MessageType<FullPixelInfoDto> {
     constructor() {
@@ -498,6 +610,6 @@ export const ColorDto = new ColorDto$Type();
  */
 export const PixelInfo = new ServiceType("PixelInfo", [
     { name: "GetPixelInfoHistories", options: {}, I: Empty, O: PixelInfoHistoriesDto },
-    { name: "CreatePixelInfo", options: {}, I: CreatePixelInfoDto, O: Empty },
-    { name: "SubscribePixelInfoUpdates", serverStreaming: true, options: {}, I: Empty, O: FullPixelInfoDto }
+    { name: "CreatePixelInfos", options: {}, I: CreatePixelInfosDto, O: Empty },
+    { name: "SubscribePixelInfosUpdates", serverStreaming: true, options: {}, I: Empty, O: FullPixelInfosDto }
 ]);

@@ -4,9 +4,9 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { PixelInfo } from "./pixel_info";
-import type { FullPixelInfoDto } from "./pixel_info";
+import type { FullPixelInfosDto } from "./pixel_info";
 import type { ServerStreamingCall } from "@protobuf-ts/runtime-rpc";
-import type { CreatePixelInfoDto } from "./pixel_info";
+import type { CreatePixelInfosDto } from "./pixel_info";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
 import type { PixelInfoHistoriesDto } from "./pixel_info";
 import type { Empty } from "./google/protobuf/empty";
@@ -21,13 +21,13 @@ export interface IPixelInfoClient {
      */
     getPixelInfoHistories(input: Empty, options?: RpcOptions): UnaryCall<Empty, PixelInfoHistoriesDto>;
     /**
-     * @generated from protobuf rpc: CreatePixelInfo(CreatePixelInfoDto) returns (google.protobuf.Empty);
+     * @generated from protobuf rpc: CreatePixelInfos(CreatePixelInfosDto) returns (google.protobuf.Empty);
      */
-    createPixelInfo(input: CreatePixelInfoDto, options?: RpcOptions): UnaryCall<CreatePixelInfoDto, Empty>;
+    createPixelInfos(input: CreatePixelInfosDto, options?: RpcOptions): UnaryCall<CreatePixelInfosDto, Empty>;
     /**
-     * @generated from protobuf rpc: SubscribePixelInfoUpdates(google.protobuf.Empty) returns (stream FullPixelInfoDto);
+     * @generated from protobuf rpc: SubscribePixelInfosUpdates(google.protobuf.Empty) returns (stream FullPixelInfosDto);
      */
-    subscribePixelInfoUpdates(input: Empty, options?: RpcOptions): ServerStreamingCall<Empty, FullPixelInfoDto>;
+    subscribePixelInfosUpdates(input: Empty, options?: RpcOptions): ServerStreamingCall<Empty, FullPixelInfosDto>;
 }
 /**
  * @generated from protobuf service PixelInfo
@@ -46,17 +46,17 @@ export class PixelInfoClient implements IPixelInfoClient, ServiceInfo {
         return stackIntercept<Empty, PixelInfoHistoriesDto>("unary", this._transport, method, opt, input);
     }
     /**
-     * @generated from protobuf rpc: CreatePixelInfo(CreatePixelInfoDto) returns (google.protobuf.Empty);
+     * @generated from protobuf rpc: CreatePixelInfos(CreatePixelInfosDto) returns (google.protobuf.Empty);
      */
-    createPixelInfo(input: CreatePixelInfoDto, options?: RpcOptions): UnaryCall<CreatePixelInfoDto, Empty> {
+    createPixelInfos(input: CreatePixelInfosDto, options?: RpcOptions): UnaryCall<CreatePixelInfosDto, Empty> {
         const method = this.methods[1], opt = this._transport.mergeOptions(options);
-        return stackIntercept<CreatePixelInfoDto, Empty>("unary", this._transport, method, opt, input);
+        return stackIntercept<CreatePixelInfosDto, Empty>("unary", this._transport, method, opt, input);
     }
     /**
-     * @generated from protobuf rpc: SubscribePixelInfoUpdates(google.protobuf.Empty) returns (stream FullPixelInfoDto);
+     * @generated from protobuf rpc: SubscribePixelInfosUpdates(google.protobuf.Empty) returns (stream FullPixelInfosDto);
      */
-    subscribePixelInfoUpdates(input: Empty, options?: RpcOptions): ServerStreamingCall<Empty, FullPixelInfoDto> {
+    subscribePixelInfosUpdates(input: Empty, options?: RpcOptions): ServerStreamingCall<Empty, FullPixelInfosDto> {
         const method = this.methods[2], opt = this._transport.mergeOptions(options);
-        return stackIntercept<Empty, FullPixelInfoDto>("serverStreaming", this._transport, method, opt, input);
+        return stackIntercept<Empty, FullPixelInfosDto>("serverStreaming", this._transport, method, opt, input);
     }
 }
