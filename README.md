@@ -14,13 +14,13 @@ In order to build the frontend for Docker you need to install [Node.js](https://
 
 ### Quick Start
 
-To quickly test the whole project, move to the folder *./paint-dream-web* and run the commands:
+First, you need to build the frontend. Move to the folder *./paint-dream-web* and run the command:
 
 ```
 yarn && yarn build
 ```
 
-Afterwards, you have to execute the command to run the whole project: 
+Afterwards, you can run the following command to build the backend and create running Docker containers: 
 
 ```
 docker compose up -d
