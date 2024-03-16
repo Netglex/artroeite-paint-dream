@@ -14,13 +14,13 @@ For debugging the frontend, you need to install [Node.js](https://nodejs.org/en/
 
 ### Quick Start
 
-You can run the following command to build all the necessary components to run the full-stack application: 
+Navigate to the repository folder, then execute the following command to build all the necessary components and run the full-stack application: 
 
 ```
 docker compose up -d
 ```
 
-> :warning: Always make sure to adapt the volume mapping for the database or delete it.
+> :warning: Always make sure to adapt the volume mapping for the database or delete it in *docker-compose.yaml*.
 
 ## :classical_building: Architecture
 
