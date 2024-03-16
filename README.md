@@ -10,17 +10,11 @@ Make sure you have installed [Docker](https://docs.docker.com/engine/install/) i
 
 If you want to make modifications and test the backend, you need to install [ASP.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
-In order to build the frontend for Docker you need to install [Node.js](https://nodejs.org/en/download/).
+For debugging the frontend, you need to install [Node.js](https://nodejs.org/en/download/).
 
 ### Quick Start
 
-First, you need to build the frontend. Move to the folder *./paint-dream-web* and run the command:
-
-```
-yarn && yarn build
-```
-
-Afterwards, you can run the following command to build the backend and create running Docker containers: 
+You can run the following command to build all the necessary components to run the full-stack application: 
 
 ```
 docker compose up -d

@@ -18,7 +18,7 @@ const usePixelInfoStore = create<PixelInfoState>((set) => ({
         for (const fullPixelInfo of fullPixelInfos.pixelInfos) {
           const oldHistory = draft.find((history) => equals(fullPixelInfo.position, history.position));
           if (oldHistory)
-            oldHistory.history.push({ creationDate: fullPixelInfo.creationDate, color: fullPixelInfo.color });
+            oldHistory.history.unshift({ creationDate: fullPixelInfo.creationDate, color: fullPixelInfo.color });
           else
             draft.push({
               position: fullPixelInfo.position,

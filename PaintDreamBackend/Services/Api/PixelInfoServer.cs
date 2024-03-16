@@ -15,7 +15,8 @@ public class PixelInfoServer : PixelInfo.PixelInfoBase
     private readonly IHostApplicationLifetime _hostApplicationLifetime;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    private static Subject<List<PixelInfoDb>> OnPixelInfosCreated = new();
+    private static readonly Subject<List<PixelInfoDb>> OnPixelInfosCreated = new();
+    private static readonly SemaphoreSlim Semaphore = new(1, 1);
 
     public PixelInfoServer(
         ILogger<PixelInfoServer> logger,
@@ -59,32 +60,42 @@ public class PixelInfoServer : PixelInfo.PixelInfoBase
 
     public override async Task<Empty> CreatePixelInfos(CreatePixelInfosDto request, ServerCallContext context)
     {
-        _logger.LogInformation("Creating pixel infos from client {Peer}", context.Peer);
-
-        using var scope = _serviceScopeFactory.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<PaintDreamContext>();
-
-        var pixelInfos = new List<PixelInfoDb>();
-        foreach (var cpi in request.PixelInfos)
+        try
         {
-            var pixelInfoHistory = await dbContext.PixelInfoHistories.FirstOrDefaultAsync(pih => pih.Position.X == cpi.Position.X && pih.Position.Y == cpi.Position.Y);
-            
-            pixelInfoHistory ??= new PixelInfoHistoryDb
-            {
-                Position = new PositionDb(cpi.Position.X, cpi.Position.Y),
-            };
+            _logger.LogInformation("Creating pixel infos from client {Peer}", context.Peer);
 
-            var pixelInfo = new PixelInfoDb
-            {
-                Color = new ColorDb(cpi.Color.R, cpi.Color.G, cpi.Color.B),
-                History = pixelInfoHistory
-            };
+            await Semaphore.WaitAsync();
 
-            await dbContext.PixelInfos.AddAsync(pixelInfo);
-            pixelInfos.Add(pixelInfo);
+            using var scope = _serviceScopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaintDreamContext>();
+
+            var pixelInfos = new List<PixelInfoDb>();
+            foreach (var cpi in request.PixelInfos)
+            {
+                var pixelInfoHistory = await dbContext.PixelInfoHistories.FirstOrDefaultAsync(pih => pih.Position.X == cpi.Position.X && pih.Position.Y == cpi.Position.Y);
+
+                pixelInfoHistory ??= new PixelInfoHistoryDb
+                {
+                    Position = new PositionDb(cpi.Position.X, cpi.Position.Y),
+                };
+
+                var pixelInfo = new PixelInfoDb
+                {
+                    Color = new ColorDb(cpi.Color.R, cpi.Color.G, cpi.Color.B),
+                    History = pixelInfoHistory
+                };
+
+                await dbContext.PixelInfos.AddAsync(pixelInfo);
+                pixelInfos.Add(pixelInfo);
+            }
+            await dbContext.SaveChangesAsync();
+            OnPixelInfosCreated.OnNext(pixelInfos);
         }
-        await dbContext.SaveChangesAsync();
-        OnPixelInfosCreated.OnNext(pixelInfos);
+        catch { }
+        finally
+        {
+            Semaphore.Release();
+        }
 
         return new Empty();
     }
